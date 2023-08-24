@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  php-fpm:
+    container_name: burda-php
+    build:
+      context: ./php
+    volumes:
+      - ../:/var/www
+      - ./persisted_data/symfony-logs:/var/www/var/log
+    depends_on:
+      - burda-db
+      - redis
+    networks:
+      - burda
+
+  nginx-burda:
+    build:
+      context: ./nginx
+    ports:
+      - "8089:80"
+    depends_on:
+      - php-fpm
+    networks:
+      - burda
+
+  burda-db:
+    container_name: burda-db
+    image: postgres
+    restart: always
+    env_file:
+      - ../.env
+    ports:
+      - "8088:5432"
+    volumes:
+      - ./persisted_data/database:/var/lib/postgresql/data:rw
+    networks:
+      - burda
+
+  redis:
+    image: "redis:7-alpine"
+    ports:
+      - "6379"
+    volumes:
+      - ./persisted_data/redis-data:/var/lib/redis/data
+    networks:
+      - burda
+
+networks:
+  burda:
+volumes:
+  database:
+  redis-data:
+  symfony-logs:

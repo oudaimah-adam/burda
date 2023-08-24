@@ -1,0 +1,48 @@
+Burda\Entity\Author:
+  properties:
+    name:
+      - NotNull: ~
+      - NotBlank: ~
+      - Length:
+          max: 50
+    email:
+      - When:
+          expression: 'value !== null'
+          constraints:
+            - Length:
+                max: 255
+    biography:
+      - When:
+          expression: 'value !== null'
+          constraints:
+            - Length:
+                max: 255
+    birthDate:
+      - When:
+          expression: 'value !== null'
+          constraints:
+            - Date: ~
+
+Burda\Entity\BlogPost:
+  properties:
+    title:
+      - NotNull: ~
+      - NotBlank: ~
+      - Length:
+          max: 50
+    content:
+      - When:
+          expression: 'value !== null'
+          constraints:
+            - Length:
+                max: 255
+    publicationDate:
+      - When:
+          expression: 'value !== null'
+          constraints:
+            - Date: ~
+    updateAt:
+      - When:
+          expression: 'value !== null'
+          constraints:
+            - DateTime: ~
